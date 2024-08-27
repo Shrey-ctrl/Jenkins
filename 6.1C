@@ -7,6 +7,11 @@ pipeline {
                 echo 'Building project to compile and package using Maven'
                 // sh 'mvn clean package'
             }
+            post {
+                always {
+                    archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+                }
+            }
         }
 
         stage("Unit and Integration Tests") {
@@ -16,16 +21,22 @@ pipeline {
                 echo 'Integration Test working together.'
                 // sh 'mvn verify'
             }
-            post { 
+            post {
                 success {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Success: JUnit and Integration test successful.",
-                         body: "JUnit and Integration tests have passed successfully. Stage is working."
+                    emailext(
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Success: JUnit and Integration test successful.",
+                        body: "JUnit and Integration tests have passed successfully. Stage is working.",
+                        attachmentsPattern: '**/target/test-*.xml' // Adjust pattern to match your test report files
+                    )
                 }
                 failure {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Failure: JUnit and Integration test failure.",
-                         body: "JUnit and Integration tests have failed. Stage is not working. Please review the logs."
+                    emailext(
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Failure: JUnit and Integration test failure.",
+                        body: "JUnit and Integration tests have failed. Stage is not working. Please review the logs.",
+                        attachmentsPattern: '**/target/test-*.xml' // Adjust pattern to match your test report files
+                    )
                 }
             }
         }
@@ -44,14 +55,20 @@ pipeline {
             }
             post {
                 success {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Success: Security scan successful.",
-                         body: "Security scan has completed successfully. Scan is secure."
+                    emailext(
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Success: Security scan successful.",
+                        body: "Security scan has completed successfully. Scan is secure.",
+                        attachmentsPattern: '**/zap-reports/*.html' // Adjust pattern to match your scan report files
+                    )
                 }
                 failure {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Failure: Security scan failed.",
-                         body: "Security scan has failed. Scan is not secure. Please review and take necessary actions."
+                    emailext(
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Failure: Security scan failed.",
+                        body: "Security scan has failed. Scan is not secure. Please review and take necessary actions.",
+                        attachmentsPattern: '**/zap-reports/*.html' // Adjust pattern to match your scan report files
+                    )
                 }
             }
         }
@@ -76,7 +93,6 @@ pipeline {
                 // sh 'aws deploy create-deployment --application-name my-app --deployment-group-name production-group --s3-location bucket=production-bucket,key=my-app.zip'
             }
         }
-    
     }
 
     post {
