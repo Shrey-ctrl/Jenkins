@@ -16,27 +16,16 @@ pipeline {
                 echo 'Integration Test working together.'
                 // sh 'mvn verify'
             }
-            post {
-                always {
-                    // Adjust these paths based on actual test result locations
-                    archiveArtifacts artifacts: '**/target/test-*.xml', allowEmptyArchive: true
-                    junit '**/target/test-*.xml'
-                }
+            post { 
                 success {
-                    emailext(
-                        to: "shreydsaraf@gmail.com",
-                        subject: "Success: JUnit and Integration tests successful.",
-                        body: "JUnit and Integration tests have passed successfully. Stage is working.",
-                        attachmentsPattern: '**/target/test-*.xml'
-                    )
+                    mail to: "shreydsaraf@gmail.com",
+                         subject: "Success: JUnit and Integration test successful.",
+                         body: "JUnit and Integration tests have passed successfully. Stage is working."
                 }
                 failure {
-                    emailext(
-                        to: "shreydsaraf@gmail.com",
-                        subject: "Failure: JUnit and Integration tests failed.",
-                        body: "JUnit and Integration tests have failed. Stage is not working. Please review the logs.",
-                        attachmentsPattern: '**/target/test-*.xml'
-                    )
+                    mail to: "shreydsaraf@gmail.com",
+                         subject: "Failure: JUnit and Integration test failure.",
+                         body: "JUnit and Integration tests have failed. Stage is not working. Please review the logs."
                 }
             }
         }
@@ -54,25 +43,15 @@ pipeline {
                 // sh 'zap-cli quick-scan --self-contained --start-options "-config api.disablekey=true" http://localhost:8080'
             }
             post {
-                always {
-                    // Adjust this path based on actual report location
-                    archiveArtifacts artifacts: '**/zap-reports/*.html', allowEmptyArchive: true
-                }
                 success {
-                    emailext(
-                        to: "shreydsaraf@gmail.com",
-                        subject: "Success: Security scan successful.",
-                        body: "Security scan has completed successfully. Scan is secure.",
-                        attachmentsPattern: '**/zap-reports/*.html'
-                    )
+                    mail to: "shreydsaraf@gmail.com",
+                         subject: "Success: Security scan successful.",
+                         body: "Security scan has completed successfully. Scan is secure."
                 }
                 failure {
-                    emailext(
-                        to: "shreydsaraf@gmail.com",
-                        subject: "Failure: Security scan failed.",
-                        body: "Security scan has failed. Scan is not secure. Please review and take necessary actions.",
-                        attachmentsPattern: '**/zap-reports/*.html'
-                    )
+                    mail to: "shreydsaraf@gmail.com",
+                         subject: "Failure: Security scan failed.",
+                         body: "Security scan has failed. Scan is not secure. Please review and take necessary actions."
                 }
             }
         }
@@ -97,6 +76,7 @@ pipeline {
                 // sh 'aws deploy create-deployment --application-name my-app --deployment-group-name production-group --s3-location bucket=production-bucket,key=my-app.zip'
             }
         }
+    
     }
 
     post {
