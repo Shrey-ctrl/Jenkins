@@ -18,6 +18,7 @@ pipeline {
             }
             post {
                 always {
+                    // Adjust these paths based on actual test result locations
                     archiveArtifacts artifacts: '**/target/test-*.xml', allowEmptyArchive: true
                     junit '**/target/test-*.xml'
                 }
@@ -54,6 +55,7 @@ pipeline {
             }
             post {
                 always {
+                    // Adjust this path based on actual report location
                     archiveArtifacts artifacts: '**/zap-reports/*.html', allowEmptyArchive: true
                 }
                 success {
