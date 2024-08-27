@@ -7,11 +7,6 @@ pipeline {
                 echo 'Building project to compile and package using Maven'
                 // sh 'mvn clean package'
             }
-            post {
-                always {
-                    archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
-                }
-            }
         }
 
         stage("Unit and Integration Tests") {
@@ -22,20 +17,24 @@ pipeline {
                 // sh 'mvn verify'
             }
             post {
+                always {
+                    archiveArtifacts artifacts: '**/target/test-*.xml', allowEmptyArchive: true
+                    junit '**/target/test-*.xml'
+                }
                 success {
                     emailext(
                         to: "shreydsaraf@gmail.com",
-                        subject: "Success: JUnit and Integration test successful.",
+                        subject: "Success: JUnit and Integration tests successful.",
                         body: "JUnit and Integration tests have passed successfully. Stage is working.",
-                        attachmentsPattern: '**/target/test-*.xml' // Adjust pattern to match your test report files
+                        attachmentsPattern: '**/target/test-*.xml'
                     )
                 }
                 failure {
                     emailext(
                         to: "shreydsaraf@gmail.com",
-                        subject: "Failure: JUnit and Integration test failure.",
+                        subject: "Failure: JUnit and Integration tests failed.",
                         body: "JUnit and Integration tests have failed. Stage is not working. Please review the logs.",
-                        attachmentsPattern: '**/target/test-*.xml' // Adjust pattern to match your test report files
+                        attachmentsPattern: '**/target/test-*.xml'
                     )
                 }
             }
@@ -54,12 +53,15 @@ pipeline {
                 // sh 'zap-cli quick-scan --self-contained --start-options "-config api.disablekey=true" http://localhost:8080'
             }
             post {
+                always {
+                    archiveArtifacts artifacts: '**/zap-reports/*.html', allowEmptyArchive: true
+                }
                 success {
                     emailext(
                         to: "shreydsaraf@gmail.com",
                         subject: "Success: Security scan successful.",
                         body: "Security scan has completed successfully. Scan is secure.",
-                        attachmentsPattern: '**/zap-reports/*.html' // Adjust pattern to match your scan report files
+                        attachmentsPattern: '**/zap-reports/*.html'
                     )
                 }
                 failure {
@@ -67,7 +69,7 @@ pipeline {
                         to: "shreydsaraf@gmail.com",
                         subject: "Failure: Security scan failed.",
                         body: "Security scan has failed. Scan is not secure. Please review and take necessary actions.",
-                        attachmentsPattern: '**/zap-reports/*.html' // Adjust pattern to match your scan report files
+                        attachmentsPattern: '**/zap-reports/*.html'
                     )
                 }
             }
