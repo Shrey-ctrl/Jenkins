@@ -5,7 +5,6 @@ pipeline {
         stage("Build") {
             steps {
                 echo 'Building project to compile and package using Maven'
-                // Example Maven command (commented out)
                 // sh 'mvn clean package'
             }
         }
@@ -13,10 +12,8 @@ pipeline {
         stage("Unit and Integration Tests") {
             steps {
                 echo 'JUnit test for code function.'
-                // Example JUnit command (commented out)
                 // sh 'mvn test'
                 echo 'Integration Test working together.'
-                // Example Integration Test command (commented out)
                 // sh 'mvn verify'
             }
             post { 
@@ -36,7 +33,6 @@ pipeline {
         stage("Code Analysis") {
             steps {
                 echo 'Performing code analysis using SonarQube'
-                // Example SonarQube command (commented out)
                 // sh 'mvn sonar:sonar'
             }
         }
@@ -44,7 +40,6 @@ pipeline {
         stage("Security Scan") {
             steps {
                 echo 'Performing security scan using OWASP ZAP'
-                // Example OWASP ZAP command (commented out)
                 // sh 'zap-cli quick-scan --self-contained --start-options "-config api.disablekey=true" http://localhost:8080'
             }
             post {
@@ -64,7 +59,6 @@ pipeline {
         stage("Deploy to Staging") {
             steps {
                 echo 'Deploy to staging server AWS EC2 s3://staging-bucket/'
-                // Example AWS CLI command (commented out)
                 // sh 'aws deploy create-deployment --application-name my-app --deployment-group-name staging-group --s3-location bucket=staging-bucket,key=my-app.zip'
             }
         }
@@ -72,7 +66,6 @@ pipeline {
         stage("Integration Tests on Staging") {
             steps {
                 echo 'Run Integration Tests on Staging environment'
-                // Example Integration Test command (commented out)
                 // sh 'mvn verify -Dtest=IntegrationTest'
             }
         }
@@ -80,7 +73,6 @@ pipeline {
         stage("Deploy to Production") {
             steps {
                 echo 'Deploy to Production server AWS EC2'
-                // Example AWS CLI command (commented out)
                 // sh 'aws deploy create-deployment --application-name my-app --deployment-group-name production-group --s3-location bucket=production-bucket,key=my-app.zip'
             }
         }
