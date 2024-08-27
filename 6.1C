@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage("Build") {
             steps {
-                echo 'Building project to compile and package using '
+                echo 'Building project to compile and package using Maven'
                 // Example Maven command (commented out)
                 // sh 'mvn clean package'
             }
@@ -82,6 +82,13 @@ pipeline {
                 echo 'Deploy to Production server AWS EC2'
                 // Example AWS CLI command (commented out)
                 // sh 'aws deploy create-deployment --application-name my-app --deployment-group-name production-group --s3-location bucket=production-bucket,key=my-app.zip'
+            }
+        }
+
+
+        stage("Complete") {
+            steps {
+                echo 'Complete'
             }
         }
     }
