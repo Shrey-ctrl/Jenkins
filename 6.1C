@@ -20,7 +20,8 @@ pipeline {
                 success {
                     mail to: "shreydsaraf@gmail.com",
                          subject: "Success: JUnit and Integration test successful.",
-                         body: "JUnit and Integration tests have passed successfully. Stage is working."
+                         body: "JUnit and Integration tests have passed successfully. Stage is working.",
+                          def result= attachLog: true;
                 }
                 failure {
                     mail to: "shreydsaraf@gmail.com",
