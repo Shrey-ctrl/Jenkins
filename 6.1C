@@ -5,6 +5,7 @@ pipeline {
         stage("Build") {
             steps {
                 echo 'Building project to compile and package using Maven'
+                // Uncomment the below line if you have Maven configured
                 // sh 'mvn clean package'
             }
         }
@@ -18,15 +19,20 @@ pipeline {
             }
             post { 
                 success {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Success: JUnit and Integration test successful.",
-                         body: "JUnit and Integration tests have passed successfully. Stage is working.",
-                          def result= attachLog: true;
+                    emailext (
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Success: JUnit and Integration test successful.",
+                        body: "JUnit and Integration tests have passed successfully. Stage is working.",
+                        attachLog: true // This attaches the build log
+                    )
                 }
                 failure {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Failure: JUnit and Integration test failure.",
-                         body: "JUnit and Integration tests have failed. Stage is not working. Please review the logs."
+                    emailext (
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Failure: JUnit and Integration test failure.",
+                        body: "JUnit and Integration tests have failed. Stage is not working. Please review the logs.",
+                        attachLog: true // This attaches the build log
+                    )
                 }
             }
         }
@@ -45,14 +51,20 @@ pipeline {
             }
             post {
                 success {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Success: Security scan successful.",
-                         body: "Security scan has completed successfully. Scan is secure."
+                    emailext (
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Success: Security scan successful.",
+                        body: "Security scan has completed successfully. Scan is secure.",
+                        attachLog: true // This attaches the build log
+                    )
                 }
                 failure {
-                    mail to: "shreydsaraf@gmail.com",
-                         subject: "Failure: Security scan failed.",
-                         body: "Security scan has failed. Scan is not secure. Please review and take necessary actions."
+                    emailext (
+                        to: "shreydsaraf@gmail.com",
+                        subject: "Failure: Security scan failed.",
+                        body: "Security scan has failed. Scan is not secure. Please review and take necessary actions.",
+                        attachLog: true // This attaches the build log
+                    )
                 }
             }
         }
@@ -83,15 +95,25 @@ pipeline {
                 echo 'Completed'
             }
         }
-    
     }
 
     post {
         success {
-            echo 'Deployment to production successful!'
+            emailext (
+                to: "shreydsaraf@gmail.com",
+                subject: "Deployment to production successful!",
+                body: "The deployment to production was successful. Check the attached logs for details.",
+                attachLog: true // This attaches the build log
+            )
         }
         failure {
-            echo 'Deployment failed!'
+            emailext (
+                to: "shreydsaraf@gmail.com",
+                subject: "Deployment failed!",
+                body: "The deployment has failed. Please review the attached logs for more details.",
+                attachLog: true // This attaches the build log
+            )
         }
     }
 }
+
